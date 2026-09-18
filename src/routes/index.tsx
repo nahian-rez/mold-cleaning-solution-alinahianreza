@@ -11,7 +11,7 @@ import {
   Users,
   Waves,
 } from "lucide-react";
-import { useMemo, useState, type ComponentType } from "react";
+import { useMemo, useState, type ComponentType, type CSSProperties } from "react";
 
 type ScenarioKey = "pessimistic" | "realistic" | "optimistic";
 
@@ -130,7 +130,6 @@ function MoldBottleneckCalculator() {
   }
 
   function updateInput(key: keyof Inputs, value: number) {
-    setScenario("realistic");
     setInputs((current) => ({ ...current, [key]: value }));
   }
 
@@ -239,7 +238,7 @@ function MoldBottleneckCalculator() {
                     onChange={(event) => updateInput(definition.key, Number(event.target.value))}
                     aria-label={definition.label}
                     className="cost-slider w-full"
-                    style={{ "--range-progress": `${progress}%` } as React.CSSProperties}
+                    style={{ "--range-progress": `${progress}%` } as CSSProperties}
                   />
                 </div>
               );
