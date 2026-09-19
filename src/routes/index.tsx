@@ -72,18 +72,19 @@ const inputDefinitions: Array<{
   min: number;
   max: number;
   step: number;
+  digits: number;
   prefix?: string;
   suffix?: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
-  { key: "molds", label: "Molds per cycle", hint: "Batch size", min: 50, max: 500, step: 10, icon: Gauge },
-  { key: "cyclesPerWeek", label: "Cleaning cycles", hint: "Per week", min: 0.5, max: 7, step: 0.1, suffix: "×", icon: RotateCcw },
-  { key: "hoursPerCycle", label: "Manual cleaning time", hint: "Per cycle", min: 1, max: 8, step: 0.5, suffix: " hrs", icon: Clock3 },
-  { key: "peoplePerCycle", label: "Team members", hint: "Per cycle", min: 1, max: 8, step: 1, icon: Users },
-  { key: "hourlyRate", label: "Loaded hourly rate", hint: "Per person", min: 15, max: 60, step: 1, prefix: "$", suffix: "/hr", icon: Banknote },
-  { key: "equipmentCost", label: "Equipment investment", hint: "One-time", min: 1000, max: 20000, step: 500, prefix: "$", icon: Waves },
-  { key: "maintenanceCost", label: "Annual maintenance", hint: "Supplies & service", min: 0, max: 10000, step: 250, prefix: "$", icon: Gauge },
-  { key: "operatorCost", label: "Annual operator cost", hint: "Labor allocation", min: 0, max: 40000, step: 500, prefix: "$", icon: Users },
+  { key: "molds", label: "Molds in circulation", hint: "In rotation", min: 50, max: 500, step: 10, digits: 0, icon: Gauge },
+  { key: "cyclesPerWeek", label: "Production cycles", hint: "Per week", min: 0.5, max: 7, step: 0.1, digits: 1, suffix: "×", icon: RotateCcw },
+  { key: "hoursPerCycle", label: "Hours per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 0.5, digits: 1, suffix: " hrs", icon: Clock3 },
+  { key: "peoplePerCycle", label: "People per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 1, digits: 0, icon: Users },
+  { key: "hourlyRate", label: "Hourly loaded labor rate", hint: "Per person", min: 15, max: 60, step: 0.01, digits: 2, prefix: "$", suffix: "/hr", icon: Banknote },
+  { key: "equipmentCost", label: "Equipment cost", hint: "Capital, one-time", min: 1000, max: 25000, step: 100, digits: 0, prefix: "$", icon: Waves },
+  { key: "maintenanceCost", label: "Annual maintenance/solution cost", hint: "Supplies & service", min: 0, max: 10000, step: 250, digits: 0, prefix: "$", icon: Gauge },
+  { key: "operatorCost", label: "Annual operator cost", hint: "Labor allocation", min: 0, max: 40000, step: 500, digits: 0, prefix: "$", icon: Users },
 ];
 
 const currency = new Intl.NumberFormat("en-US", {
