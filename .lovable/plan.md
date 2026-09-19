@@ -8,16 +8,16 @@ Insert a new block inside the existing hero `<section>` (the `border-b border-bo
 
 The banner is a bordered callout box with a distinct warm background (`bg-cocoa` / amber border, matching the existing chocolate palette) containing:
 
-- Small uppercase label: **"FULL PROPOSAL"** (styled like the existing `text-xs font-bold uppercase tracking-[0.16em]` eyebrow labels, using `text-amber`).
+- Small uppercase label: **"FULL PROPOSAL & SOURCES"** (styled like the existing `text-xs font-bold uppercase tracking-[0.16em]` eyebrow labels, using `text-amber`).
 - Heading: **"90-Day Implementation Roadmap"** (`font-display`, sized ~2xl).
-- One supporting line: "See the complete rollout plan, risk assessment, and sourced evidence behind these numbers." (`text-sm text-muted-foreground`, using cocoa-foreground on the cocoa bg variant).
-- A clearly clickable link button labeled **"View the Roadmap →"** that opens `https://claude.ai/artifact/QiJz96nmkxQNRqmAepMnyf` in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`), styled as a small pill/link using the amber/primary accent tone.
+- One supporting line: "See the complete rollout plan, risks, success metrics, and every cited source behind these numbers." (`text-sm`, using cocoa-foreground/75 on the cocoa bg variant).
+- A clearly clickable button/link labeled **"View Roadmap & Sources →"** that opens `https://claude.ai/artifact/QiJz96nmkxQNRqmAepMnyf` in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`), styled as a small pill/link using the amber/primary accent tone.
 
 The callout uses only existing design tokens (`bg-cocoa`, `text-cocoa-foreground`, `text-amber`, `border-amber`, `bg-amber`, `text-primary`) — no new CSS, no new classes added to `src/styles.css`.
 
 ## 2. Footer secondary link (insert into the existing footer)
 
-In the existing `<footer>` (line 408–411), add one small line immediately **above** the existing `Cocoa Dolce · Planning estimate only...` line. It is a plain text link labeled **"View the 90-Day Implementation Roadmap →"** pointing to the same URL, opening in a new tab, styled to match the footer's existing `text-xs text-muted-foreground` tone. No change to the existing `PRICE_BASIS_NOTE` line or the existing planning-estimate line.
+In the existing `<footer>` (line 408–411), add a small link **next to** the existing `Cocoa Dolce · Planning estimate only...` line. It is a plain text link labeled **"View Roadmap & Sources →"** pointing to the same URL, opening in a new tab, styled to match the footer's existing `text-xs text-muted-foreground` tone. No change to the existing `PRICE_BASIS_NOTE` line or the existing planning-estimate line.
 
 ## 3. Verification (after the edit)
 
