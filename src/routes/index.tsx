@@ -425,7 +425,18 @@ function MoldBottleneckCalculator() {
 
       <footer className="border-t border-border px-5 py-6 text-center text-xs text-muted-foreground">
         <p>{PRICE_BASIS_NOTE}</p>
-        <p className="mt-1">Cocoa Dolce · Planning estimate only · Validate inputs before capital approval</p>
+        <p className="mt-1">
+          <a
+            href="https://ultrasoniccleanerchoclathonroadmap.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-muted-foreground transition-colors hover:text-primary"
+          >
+            View Roadmap & Sources →
+          </a>
+          <span className="mx-2 text-muted-foreground/40" aria-hidden="true">·</span>
+          Cocoa Dolce · Planning estimate only · Validate inputs before capital approval
+        </p>
       </footer>
     </main>
   );
