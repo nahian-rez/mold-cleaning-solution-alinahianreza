@@ -17,7 +17,7 @@ The callout uses only existing design tokens (`bg-cocoa`, `text-cocoa-foreground
 
 ## 2. Footer secondary link (insert into the existing footer)
 
-In the existing `<footer>` (line 408–411), add a small link **next to** the existing `Cocoa Dolce · Planning estimate only...` line. It is a plain text link labeled **"View Roadmap & Sources →"** pointing to the same URL, opening in a new tab, styled to match the footer's existing `text-xs text-muted-foreground` tone. No change to the existing `PRICE_BASIS_NOTE` line or the existing planning-estimate line.
+In the existing `<footer>` (line 408–411), add a small link **next to** the existing `Cocoa Dolce · Planning estimate only...` line. It is a plain text link labeled **"View Roadmap & Sources →"** pointing to `https://ultrasoniccleanerchoclathonroadmap.netlify.app/`, opening in a new tab, styled to match the footer's existing `text-xs text-muted-foreground` tone. No change to the existing `PRICE_BASIS_NOTE` line or the existing planning-estimate line.
 
 ## 3. Verification (after the edit)
 
