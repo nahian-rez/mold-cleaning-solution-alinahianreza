@@ -21,7 +21,7 @@ type ScenarioKey = "pessimistic" | "realistic" | "optimistic";
 const BASE_EQUIPMENT_COST = 7170;
 const EQUIPMENT_MODEL = "SharperTek XP1500-21G";
 const PRICE_BASIS_NOTE =
-  "Price basis: SharperTek XP1500-21G, 21-gallon professional-economy ultrasonic cleaner; equipment-only price: $7,170.00.";
+  "Price basis: SharperTek XP1500-21G, 21-gallon professional-economy ultrasonic cleaner; equipment-only list price: $7,170.00 (per UltrasonicsDirect, current sale pricing may vary).";
 
 type Inputs = {
   molds: number;
@@ -109,7 +109,7 @@ const costFields: Array<{
   hint: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
-  { key: "baseEquipmentCost", label: "Base Equipment Cost", hint: `${EQUIPMENT_MODEL} · equipment only`, icon: Waves },
+  { key: "baseEquipmentCost", label: "Base Equipment Cost", hint: `${EQUIPMENT_MODEL} · equipment only · list price`, icon: Waves },
   { key: "salesTax", label: "Sales Tax", hint: "One-time", icon: Banknote },
   { key: "freight", label: "Freight / Shipping", hint: "One-time", icon: Truck },
   { key: "installation", label: "Installation / Setup", hint: "One-time", icon: Wrench },
