@@ -211,6 +211,24 @@ function MoldBottleneckCalculator() {
             </p>
           </div>
 
+          <div className="mt-7 flex flex-col gap-4 rounded-md border border-amber/40 bg-cocoa px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber">FULL PROPOSAL & SOURCES</p>
+              <h2 className="mt-1 font-display text-2xl text-cocoa-foreground">90-Day Implementation Roadmap</h2>
+              <p className="mt-1 text-sm leading-6 text-cocoa-foreground/75">
+                See the complete rollout plan, risks, success metrics, and every cited source behind these numbers.
+              </p>
+            </div>
+            <a
+              href="https://ultrasoniccleanerchoclathonroadmap.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-amber px-4 py-2.5 text-sm font-bold text-cocoa transition-colors hover:bg-amber/90"
+            >
+              View Roadmap & Sources →
+            </a>
+          </div>
+
           <div className="mt-7 grid gap-2 sm:grid-cols-3" role="group" aria-label="Scenario presets">
             {(Object.keys(scenarios) as ScenarioKey[]).map((key) => {
               const item = scenarios[key];
@@ -407,7 +425,18 @@ function MoldBottleneckCalculator() {
 
       <footer className="border-t border-border px-5 py-6 text-center text-xs text-muted-foreground">
         <p>{PRICE_BASIS_NOTE}</p>
-        <p className="mt-1">Cocoa Dolce · Planning estimate only · Validate inputs before capital approval</p>
+        <p className="mt-1">
+          <a
+            href="https://ultrasoniccleanerchoclathonroadmap.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-muted-foreground transition-colors hover:text-primary"
+          >
+            View Roadmap & Sources →
+          </a>
+          <span className="mx-2 text-muted-foreground/40" aria-hidden="true">·</span>
+          Cocoa Dolce · Planning estimate only · Validate inputs before capital approval
+        </p>
       </footer>
     </main>
   );
