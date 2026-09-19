@@ -11,7 +11,7 @@ The banner is a bordered callout box with a distinct warm background (`bg-cocoa`
 - Small uppercase label: **"FULL PROPOSAL & SOURCES"** (styled like the existing `text-xs font-bold uppercase tracking-[0.16em]` eyebrow labels, using `text-amber`).
 - Heading: **"90-Day Implementation Roadmap"** (`font-display`, sized ~2xl).
 - One supporting line: "See the complete rollout plan, risks, success metrics, and every cited source behind these numbers." (`text-sm`, using cocoa-foreground/75 on the cocoa bg variant).
-- A clearly clickable button/link labeled **"View Roadmap & Sources →"** that opens `https://claude.ai/artifact/QiJz96nmkxQNRqmAepMnyf` in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`), styled as a small pill/link using the amber/primary accent tone.
+- A clearly clickable button/link labeled **"View Roadmap & Sources →"** that opens `https://ultrasoniccleanerchoclathonroadmap.netlify.app/` in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`), styled as a small pill/link using the amber/primary accent tone.
 
 The callout uses only existing design tokens (`bg-cocoa`, `text-cocoa-foreground`, `text-amber`, `border-amber`, `bg-amber`, `text-primary`) — no new CSS, no new classes added to `src/styles.css`.
 
