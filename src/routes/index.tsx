@@ -226,7 +226,7 @@ function MoldBottleneckCalculator() {
                       </span>
                     </div>
                     <output htmlFor={definition.key} className="shrink-0 font-mono text-sm font-bold tabular-nums text-primary">
-                      {definition.prefix}{value.toLocaleString("en-US", { maximumFractionDigits: 1 })}{definition.suffix}
+                      {definition.prefix}{value.toLocaleString("en-US", { maximumFractionDigits: definition.digits })}{definition.suffix}
                     </output>
                   </div>
                   <input
