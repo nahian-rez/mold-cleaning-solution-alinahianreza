@@ -5,15 +5,23 @@ import {
   Check,
   Clock3,
   Gauge,
+  Package,
   RotateCcw,
   Sparkles,
   TrendingUp,
+  Truck,
   Users,
   Waves,
+  Wrench,
 } from "lucide-react";
 import { useMemo, useState, type ComponentType, type CSSProperties } from "react";
 
 type ScenarioKey = "pessimistic" | "realistic" | "optimistic";
+
+const BASE_EQUIPMENT_COST = 7170;
+const EQUIPMENT_MODEL = "SharperTek XP1500-21G";
+const PRICE_BASIS_NOTE =
+  "Price basis: SharperTek XP1500-21G, 21-gallon professional-economy ultrasonic cleaner; equipment-only price: $7,170.00.";
 
 type Inputs = {
   molds: number;
@@ -21,9 +29,22 @@ type Inputs = {
   hoursPerCycle: number;
   peoplePerCycle: number;
   hourlyRate: number;
-  equipmentCost: number;
-  maintenanceCost: number;
   operatorCost: number;
+  baseEquipmentCost: number;
+  salesTax: number;
+  freight: number;
+  installation: number;
+  accessories: number;
+  maintenanceCost: number;
+};
+
+const costDefaults = {
+  baseEquipmentCost: BASE_EQUIPMENT_COST,
+  salesTax: 0,
+  freight: 0,
+  installation: 0,
+  accessories: 0,
+  maintenanceCost: 0,
 };
 
 const scenarios: Record<ScenarioKey, Inputs & { label: string; detail: string }> = {
@@ -32,12 +53,11 @@ const scenarios: Record<ScenarioKey, Inputs & { label: string; detail: string }>
     cyclesPerWeek: 2.3,
     hoursPerCycle: 4,
     peoplePerCycle: 3,
-    hourlyRate: 27.20,
-    equipmentCost: 23804,
-    maintenanceCost: 2163,
+    hourlyRate: 27.2,
     operatorCost: 20000,
+    ...costDefaults,
     label: "Pessimistic",
-    detail: "Higher labor & capital",
+    detail: "Higher labor & support",
   },
   realistic: {
     molds: 250,
@@ -45,9 +65,8 @@ const scenarios: Record<ScenarioKey, Inputs & { label: string; detail: string }>
     hoursPerCycle: 4,
     peoplePerCycle: 3,
     hourlyRate: 22.94,
-    equipmentCost: 10580,
-    maintenanceCost: 1000,
     operatorCost: 14000,
+    ...costDefaults,
     label: "Realistic",
     detail: "Best estimate",
   },
@@ -57,11 +76,10 @@ const scenarios: Record<ScenarioKey, Inputs & { label: string; detail: string }>
     hoursPerCycle: 4,
     peoplePerCycle: 3,
     hourlyRate: 22.94,
-    equipmentCost: 7930,
-    maintenanceCost: 500,
     operatorCost: 12000,
+    ...costDefaults,
     label: "Optimistic",
-    detail: "Lower capital & support",
+    detail: "Lower support load",
   },
 };
 
@@ -82,15 +100,34 @@ const inputDefinitions: Array<{
   { key: "hoursPerCycle", label: "Hours per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 0.5, digits: 1, suffix: " hrs", icon: Clock3 },
   { key: "peoplePerCycle", label: "People per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 1, digits: 0, icon: Users },
   { key: "hourlyRate", label: "Hourly loaded labor rate", hint: "Per person", min: 15, max: 60, step: 0.01, digits: 2, prefix: "$", suffix: "/hr", icon: Banknote },
-  { key: "equipmentCost", label: "Equipment cost", hint: "Capital, one-time", min: 1000, max: 25000, step: 100, digits: 0, prefix: "$", icon: Waves },
-  { key: "maintenanceCost", label: "Annual maintenance/solution cost", hint: "Supplies & service", min: 0, max: 10000, step: 250, digits: 0, prefix: "$", icon: Gauge },
   { key: "operatorCost", label: "Annual operator cost", hint: "Labor allocation", min: 0, max: 40000, step: 500, digits: 0, prefix: "$", icon: Users },
+];
+
+const costFields: Array<{
+  key: keyof Inputs;
+  label: string;
+  hint: string;
+  icon: ComponentType<{ className?: string }>;
+}> = [
+  { key: "baseEquipmentCost", label: "Base Equipment Cost", hint: `${EQUIPMENT_MODEL} · equipment only`, icon: Waves },
+  { key: "salesTax", label: "Sales Tax", hint: "One-time", icon: Banknote },
+  { key: "freight", label: "Freight / Shipping", hint: "One-time", icon: Truck },
+  { key: "installation", label: "Installation / Setup", hint: "One-time", icon: Wrench },
+  { key: "accessories", label: "Accessories / Racks", hint: "One-time", icon: Package },
+  { key: "maintenanceCost", label: "Annual Maintenance", hint: "Recurring, per year", icon: Gauge },
 ];
 
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   maximumFractionDigits: 0,
+});
+
+const currencyExact = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
 export const Route = createFileRoute("/")({
@@ -117,9 +154,19 @@ function MoldBottleneckCalculator() {
     const annualManualCost = cyclesPerYear * manualCostPerCycle;
     const annualSolutionCost = inputs.maintenanceCost + inputs.operatorCost;
     const annualSavings = annualManualCost - annualSolutionCost;
-    const paybackMonths = annualSavings > 0 ? (inputs.equipmentCost / annualSavings) * 12 : null;
-    const threeYearROI = annualSavings * 3 - inputs.equipmentCost;
-    return { cyclesPerYear, annualManualCost, annualSolutionCost, annualSavings, paybackMonths, threeYearROI };
+    const totalInitialInvestment =
+      inputs.baseEquipmentCost + inputs.salesTax + inputs.freight + inputs.installation + inputs.accessories;
+    const paybackMonths = annualSavings > 0 ? (totalInitialInvestment / annualSavings) * 12 : null;
+    const threeYearROI = annualSavings * 3 - totalInitialInvestment;
+    return {
+      cyclesPerYear,
+      annualManualCost,
+      annualSolutionCost,
+      annualSavings,
+      totalInitialInvestment,
+      paybackMonths,
+      threeYearROI,
+    };
   }, [inputs]);
 
   const maxCost = Math.max(results.annualManualCost, results.annualSolutionCost, 1);
@@ -160,7 +207,7 @@ function MoldBottleneckCalculator() {
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-primary">Capital planning · Mold room</p>
             <h1 className="font-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">Mold cleaning ROI calculator</h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-              Model the labor savings and payback of moving from manual cleaning to an ultrasonic process.
+              Model the labor savings and payback of moving from manual cleaning to an ultrasonic process with the {EQUIPMENT_MODEL}.
             </p>
           </div>
 
@@ -245,6 +292,42 @@ function MoldBottleneckCalculator() {
               );
             })}
           </div>
+
+          <div className="mt-8">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">Investment costs</p>
+            <h3 className="mt-1 font-display text-2xl">Equipment &amp; one-time costs</h3>
+            <p className="mt-2 text-xs text-muted-foreground">Enter your own figures. All add-on costs start at $0.00.</p>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {costFields.map((field) => {
+                const Icon = field.icon;
+                return (
+                  <div key={field.key} className="rounded-md border border-border bg-card p-4">
+                    <div className="flex items-center gap-2">
+                      <span className="grid size-7 shrink-0 place-items-center rounded-sm bg-accent text-primary">
+                        <Icon className="size-3.5" aria-hidden="true" />
+                      </span>
+                      <label htmlFor={field.key} className="text-sm font-bold">{field.label}</label>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{field.hint}</p>
+                    <div className="mt-3 flex items-center gap-2 rounded-sm border border-border bg-background px-3 py-2 focus-within:border-primary">
+                      <span className="font-mono text-sm text-muted-foreground">$</span>
+                      <input
+                        id={field.key}
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        inputMode="decimal"
+                        value={inputs[field.key]}
+                        onChange={(event) => updateInput(field.key, Number(event.target.value) || 0)}
+                        className="w-full bg-transparent font-mono text-sm font-bold tabular-nums text-foreground outline-none"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
 
         <section aria-labelledby="results-title" className="lg:sticky lg:top-6 lg:self-start">
@@ -254,6 +337,8 @@ function MoldBottleneckCalculator() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
+            <MetricCard label="Base Equipment Cost" value={currencyExact.format(inputs.baseEquipmentCost)} icon={Waves} tone="solution" />
+            <MetricCard label="Total Initial Investment" value={currencyExact.format(results.totalInitialInvestment)} icon={Package} tone="neutral" />
             <MetricCard label="Annual Manual Cost" value={currency.format(results.annualManualCost)} icon={Users} tone="manual" />
             <MetricCard label="Annual Ultrasonic Cost" value={currency.format(results.annualSolutionCost)} icon={Waves} tone="solution" />
             <MetricCard
@@ -306,14 +391,23 @@ function MoldBottleneckCalculator() {
           <div className="mt-4 flex items-start gap-3 rounded-md bg-cocoa px-5 py-4 text-cocoa-foreground">
             <Sparkles className="mt-0.5 size-4 shrink-0 text-amber" aria-hidden="true" />
             <p className="text-sm leading-6 text-cocoa-foreground/75">
-              At <strong className="text-cocoa-foreground">{Math.round(results.cyclesPerYear)} cycles per year</strong>, the model includes recurring maintenance and operator labor. Equipment is treated as a one-time investment.
+              At <strong className="text-cocoa-foreground">{Math.round(results.cyclesPerYear)} cycles per year</strong>, the model includes recurring maintenance and operator labor. Payback and ROI use the Total Initial Investment.
+            </p>
+          </div>
+
+          <div className="mt-4 rounded-md border border-border bg-surface-warm px-5 py-4">
+            <p className="text-sm font-bold">Assumptions</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">{PRICE_BASIS_NOTE}</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              This equipment-only price excludes sales tax, freight/shipping, installation/setup, and accessories/racks. It is not an installed or turnkey price. Enter those costs above to see the fully loaded Total Initial Investment.
             </p>
           </div>
         </section>
       </div>
 
       <footer className="border-t border-border px-5 py-6 text-center text-xs text-muted-foreground">
-        Cocoa Dolce · Planning estimate only · Validate inputs before capital approval
+        <p>{PRICE_BASIS_NOTE}</p>
+        <p className="mt-1">Cocoa Dolce · Planning estimate only · Validate inputs before capital approval</p>
       </footer>
     </main>
   );
