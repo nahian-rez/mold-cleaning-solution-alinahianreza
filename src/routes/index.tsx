@@ -254,23 +254,23 @@ function MoldBottleneckCalculator() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <MetricCard label="Annual manual cost" value={currency.format(results.annualManualCost)} icon={Users} tone="manual" />
-            <MetricCard label="Annual ultrasonic cost" value={currency.format(results.annualSolutionCost)} icon={Waves} tone="solution" />
+            <MetricCard label="Annual Manual Cost" value={currency.format(results.annualManualCost)} icon={Users} tone="manual" />
+            <MetricCard label="Annual Ultrasonic Cost" value={currency.format(results.annualSolutionCost)} icon={Waves} tone="solution" />
             <MetricCard
-              label="Annual savings"
+              label="Annual Savings"
               value={currency.format(results.annualSavings)}
               icon={ArrowDownRight}
               tone={savingsPositive ? "savings" : "manual"}
               featured
             />
             <MetricCard
-              label="Payback period"
+              label="Payback Period"
               value={results.paybackMonths ? `${results.paybackMonths.toFixed(1)} months` : "No payback"}
               icon={Clock3}
               tone="neutral"
             />
             <MetricCard
-              label="3-year net ROI"
+              label="3-Year ROI"
               value={currency.format(results.threeYearROI)}
               icon={TrendingUp}
               tone={results.threeYearROI >= 0 ? "savings" : "manual"}
