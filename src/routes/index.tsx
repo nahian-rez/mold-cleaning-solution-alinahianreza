@@ -28,40 +28,40 @@ type Inputs = {
 
 const scenarios: Record<ScenarioKey, Inputs & { label: string; detail: string }> = {
   pessimistic: {
-    molds: 200,
-    cyclesPerWeek: 1.5,
-    hoursPerCycle: 5,
-    peoplePerCycle: 4,
-    hourlyRate: 32,
-    equipmentCost: 7000,
-    maintenanceCost: 3000,
+    molds: 250,
+    cyclesPerWeek: 2.3,
+    hoursPerCycle: 4,
+    peoplePerCycle: 3,
+    hourlyRate: 27.20,
+    equipmentCost: 23804,
+    maintenanceCost: 2163,
     operatorCost: 20000,
     label: "Pessimistic",
-    detail: "Higher costs, fewer cycles",
+    detail: "Higher labor & capital",
   },
   realistic: {
     molds: 250,
     cyclesPerWeek: 2.3,
     hoursPerCycle: 4,
     peoplePerCycle: 3,
-    hourlyRate: 28,
-    equipmentCost: 5000,
-    maintenanceCost: 2000,
+    hourlyRate: 22.94,
+    equipmentCost: 10580,
+    maintenanceCost: 1000,
     operatorCost: 14000,
     label: "Realistic",
     detail: "Best estimate",
   },
   optimistic: {
-    molds: 300,
-    cyclesPerWeek: 3.5,
-    hoursPerCycle: 3.5,
-    peoplePerCycle: 2,
-    hourlyRate: 26,
-    equipmentCost: 4500,
-    maintenanceCost: 1500,
+    molds: 250,
+    cyclesPerWeek: 2.3,
+    hoursPerCycle: 4,
+    peoplePerCycle: 3,
+    hourlyRate: 22.94,
+    equipmentCost: 7930,
+    maintenanceCost: 500,
     operatorCost: 12000,
     label: "Optimistic",
-    detail: "Lower costs, more cycles",
+    detail: "Lower capital & support",
   },
 };
 
@@ -72,18 +72,19 @@ const inputDefinitions: Array<{
   min: number;
   max: number;
   step: number;
+  digits: number;
   prefix?: string;
   suffix?: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
-  { key: "molds", label: "Molds per cycle", hint: "Batch size", min: 50, max: 500, step: 10, icon: Gauge },
-  { key: "cyclesPerWeek", label: "Cleaning cycles", hint: "Per week", min: 0.5, max: 7, step: 0.1, suffix: "×", icon: RotateCcw },
-  { key: "hoursPerCycle", label: "Manual cleaning time", hint: "Per cycle", min: 1, max: 8, step: 0.5, suffix: " hrs", icon: Clock3 },
-  { key: "peoplePerCycle", label: "Team members", hint: "Per cycle", min: 1, max: 8, step: 1, icon: Users },
-  { key: "hourlyRate", label: "Loaded hourly rate", hint: "Per person", min: 15, max: 60, step: 1, prefix: "$", suffix: "/hr", icon: Banknote },
-  { key: "equipmentCost", label: "Equipment investment", hint: "One-time", min: 1000, max: 20000, step: 500, prefix: "$", icon: Waves },
-  { key: "maintenanceCost", label: "Annual maintenance", hint: "Supplies & service", min: 0, max: 10000, step: 250, prefix: "$", icon: Gauge },
-  { key: "operatorCost", label: "Annual operator cost", hint: "Labor allocation", min: 0, max: 40000, step: 500, prefix: "$", icon: Users },
+  { key: "molds", label: "Molds in circulation", hint: "In rotation", min: 50, max: 500, step: 10, digits: 0, icon: Gauge },
+  { key: "cyclesPerWeek", label: "Production cycles", hint: "Per week", min: 0.5, max: 7, step: 0.1, digits: 1, suffix: "×", icon: RotateCcw },
+  { key: "hoursPerCycle", label: "Hours per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 0.5, digits: 1, suffix: " hrs", icon: Clock3 },
+  { key: "peoplePerCycle", label: "People per manual cycle", hint: "Per cycle", min: 1, max: 8, step: 1, digits: 0, icon: Users },
+  { key: "hourlyRate", label: "Hourly loaded labor rate", hint: "Per person", min: 15, max: 60, step: 0.01, digits: 2, prefix: "$", suffix: "/hr", icon: Banknote },
+  { key: "equipmentCost", label: "Equipment cost", hint: "Capital, one-time", min: 1000, max: 25000, step: 100, digits: 0, prefix: "$", icon: Waves },
+  { key: "maintenanceCost", label: "Annual maintenance/solution cost", hint: "Supplies & service", min: 0, max: 10000, step: 250, digits: 0, prefix: "$", icon: Gauge },
+  { key: "operatorCost", label: "Annual operator cost", hint: "Labor allocation", min: 0, max: 40000, step: 500, digits: 0, prefix: "$", icon: Users },
 ];
 
 const currency = new Intl.NumberFormat("en-US", {
@@ -225,7 +226,7 @@ function MoldBottleneckCalculator() {
                       </span>
                     </div>
                     <output htmlFor={definition.key} className="shrink-0 font-mono text-sm font-bold tabular-nums text-primary">
-                      {definition.prefix}{value.toLocaleString("en-US", { maximumFractionDigits: 1 })}{definition.suffix}
+                      {definition.prefix}{value.toLocaleString("en-US", { maximumFractionDigits: definition.digits })}{definition.suffix}
                     </output>
                   </div>
                   <input
@@ -253,23 +254,23 @@ function MoldBottleneckCalculator() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <MetricCard label="Annual manual cost" value={currency.format(results.annualManualCost)} icon={Users} tone="manual" />
-            <MetricCard label="Annual ultrasonic cost" value={currency.format(results.annualSolutionCost)} icon={Waves} tone="solution" />
+            <MetricCard label="Annual Manual Cost" value={currency.format(results.annualManualCost)} icon={Users} tone="manual" />
+            <MetricCard label="Annual Ultrasonic Cost" value={currency.format(results.annualSolutionCost)} icon={Waves} tone="solution" />
             <MetricCard
-              label="Annual savings"
+              label="Annual Savings"
               value={currency.format(results.annualSavings)}
               icon={ArrowDownRight}
               tone={savingsPositive ? "savings" : "manual"}
               featured
             />
             <MetricCard
-              label="Payback period"
+              label="Payback Period"
               value={results.paybackMonths ? `${results.paybackMonths.toFixed(1)} months` : "No payback"}
               icon={Clock3}
               tone="neutral"
             />
             <MetricCard
-              label="3-year net ROI"
+              label="3-Year ROI"
               value={currency.format(results.threeYearROI)}
               icon={TrendingUp}
               tone={results.threeYearROI >= 0 ? "savings" : "manual"}
